@@ -37,3 +37,4 @@ raw xlsx seeds -> dbt staging -> dbt prepub -> dbt pub -> push to duckdb -> push
 ....
 x. to run:
     * run .\virtualenv.ps1 - create .venv, install dependencies
+    * cd sumup_challenge, run activate_dbt.ps1
