@@ -1,4 +1,4 @@
 {{ config(materialized='table') }}
 
 select *
-from read_xlsx('{{ project_root }}/raw_data/devices.xlsx')
+from read_xlsx('raw_data/devices.xlsx')
