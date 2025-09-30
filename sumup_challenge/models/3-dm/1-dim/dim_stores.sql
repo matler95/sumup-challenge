@@ -1,11 +1,11 @@
 
 SELECT DISTINCT
-    id as store_id,
-    customer_id,
-    name as store_name,
+    store_id,
+    store_name,
+    store_typology,
     address,
     city,
     country,
-    typology,
-    created_at
-FROM {{ref ('stg_stores') }}
+    customer_id,
+    store_created_at
+FROM {{ref ('cln_stores') }}

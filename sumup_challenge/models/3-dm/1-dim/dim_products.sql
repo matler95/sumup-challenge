@@ -1,6 +1,6 @@
 WITH ranked as (
     SELECT DISTINCT product_sku
-    FROM {{ ref('dm_transactions') }}
+    FROM {{ ref('cln_transactions') }}
 )
 SELECT 
     row_number() over (order by product_sku) as product_id,

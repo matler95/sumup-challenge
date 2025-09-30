@@ -1,23 +1,19 @@
 SELECT
-    t.id AS transaction_id,
-    t.amount,
-    CASE 
-        WHEN t.status = 'accepted' THEN TRUE
-        ELSE FALSE
-    END AS is_accepted_txn,
-    t.device_id,
-    s.store_id,
-    t.product_sku,
-    t.happened_at AS transaction_date,
-    s.store_name,
-    s.country,
-    s.typology AS store_typology,
-    d.device_type,
+    transaction_id,
+    device_id,
+    device_type,
+    store_id,
+    product_sku,
+    amount,
+    status,
+    is_successful,
+    store_name,
+    country,
+    store_typology,
+    transaction_date,
     dd.calendar_year,
     dd.month_of_year,
     dd.day_of_week,
     dd.year_month_key
-FROM {{ ref('stg_transactions') }} t
-JOIN {{ ref('dim_devices') }} d ON t.device_id = d.device_id
-JOIN {{ ref('dim_stores') }} s ON d.store_id = s.store_id
-JOIN {{ ref('dim_date') }} AS dd ON CAST(t.happened_at AS DATE) = dd.date_key
+FROM {{ ref('cln_transactions') }} t
+JOIN {{ ref('dim_date') }} dd on t.transaction_date::DATE = dd.date_key

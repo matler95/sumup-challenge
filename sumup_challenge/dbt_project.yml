@@ -35,5 +35,7 @@ models:
       +materialized: table
     1-stg:
       +materialized: table
-    2-dm:
+    2-cln:
+      +materialized: table
+    3-dm:
       +materialized: table
