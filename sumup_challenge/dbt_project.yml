@@ -33,3 +33,5 @@ models:
   sumup_challenge:
     0-raw:
       +materialized: table
+    1-stg:
+      +materialized: table
