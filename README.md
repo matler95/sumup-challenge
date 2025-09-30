@@ -38,3 +38,5 @@ raw xlsx seeds -> dbt staging -> dbt prepub -> dbt pub -> push to duckdb -> push
 x. to run:
     * run .\virtualenv.ps1 - create .venv, install dependencies
     * cd sumup_challenge, run activate_dbt.ps1
+
+*** products data quality problem - each SKU has multiple product_names and categories resulting in 1500 "unique" products (with repeating SKUs) for 1500 transactions ==> ASSUMPTION: SKU is unique identifier for a product, name and category will be omitted since they are not directly required in the analysis
