@@ -39,3 +39,5 @@ models:
       +materialized: table
     3-dm:
       +materialized: table
+    4-bi:
+      +materialized: view
