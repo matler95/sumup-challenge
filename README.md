@@ -161,3 +161,4 @@ The solution is fully reproducible with:
 
 Below diagram shows the relationships between core entities in the SumUp data model.
 
+<img width="1047" height="936" alt="data_model" src="https://github.com/user-attachments/assets/47b3a8c1-764b-44d8-b542-0a7d01ef1a7c" />
