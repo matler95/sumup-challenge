@@ -1,0 +1,672 @@
+version: 2
+
+# =============================================================================
+# RAW DATA MODELS (Layer 0)
+# =============================================================================
+models:
+  - name: raw_stores
+    description: "Raw store data loaded from Excel file. Contains store information including location, typology, and customer details."
+    columns:
+      - name: id
+        description: "Unique store identifier"
+        tests:
+          - not_null
+          - unique
+      - name: name
+        description: "Store name"
+        tests:
+          - not_null
+      - name: address
+        description: "Store physical address"
+      - name: city
+        description: "City where store is located"
+      - name: country
+        description: "Country where store is located"
+        tests:
+          - not_null
+      - name: created_at
+        description: "Store creation timestamp"
+        tests:
+          - not_null
+      - name: typology
+        description: "Store business typology/category"
+        tests:
+          - not_null
+      - name: customer_id
+        description: "Customer identifier who owns the store"
+        tests:
+          - not_null
+
+  - name: raw_devices
+    description: "Raw device data loaded from Excel file. Contains device information and store associations."
+    columns:
+      - name: id
+        description: "Unique device identifier"
+        tests:
+          - not_null
+          - unique
+      - name: type
+        description: "Device type (1-5)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+      - name: store_id
+        description: "Store identifier where device is located"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('raw_stores')
+              field: id
+
+  - name: raw_transactions
+    description: "Raw transaction data loaded from Excel file. Contains payment transaction details."
+    columns:
+      - name: id
+        description: "Unique transaction identifier"
+        tests:
+          - not_null
+          - unique
+      - name: device_id
+        description: "Device identifier used for transaction"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('raw_devices')
+              field: id
+      - name: product_name
+        description: "Name of the product sold"
+      - name: product_sku
+        description: "Stock Keeping Unit - unique product identifier"
+        tests:
+          - not_null
+      - name: category_name
+        description: "Product category"
+      - name: amount
+        description: "Transaction amount in euros"
+        tests:
+          - not_null
+      - name: status
+        description: "Transaction status"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['accepted', 'cancelled', 'refused']
+      - name: card_number
+        description: "Payment card number"
+        tests:
+          - not_null
+      - name: cvv
+        description: "Card verification value"
+        tests:
+          - not_null
+      - name: created_at
+        description: "Transaction creation timestamp"
+        tests:
+          - not_null
+      - name: happened_at
+        description: "Transaction occurrence timestamp"
+        tests:
+          - not_null
+
+# =============================================================================
+# STAGING MODELS (Layer 1)
+# =============================================================================
+  - name: stg_stores
+    description: "Staged store data with data type conversions and quality flags. Includes data quality validation flags for downstream processing."
+    columns:
+      - name: store_id
+        description: "Unique store identifier (converted to integer)"
+        tests:
+          - not_null
+          - unique
+      - name: store_name
+        description: "Store name"
+        tests:
+          - not_null
+      - name: address
+        description: "Store physical address"
+      - name: city
+        description: "City where store is located"
+      - name: country
+        description: "Country where store is located"
+        tests:
+          - not_null
+      - name: store_created_at
+        description: "Store creation timestamp (formatted)"
+        tests:
+          - not_null
+      - name: store_typology
+        description: "Store business typology/category"
+        tests:
+          - not_null
+      - name: customer_id
+        description: "Customer identifier who owns the store"
+        tests:
+          - not_null
+      - name: null_name
+        description: "Data quality flag: true if store name is null or empty"
+      - name: null_country
+        description: "Data quality flag: true if country is null or empty"
+      - name: null_typology
+        description: "Data quality flag: true if typology is null or empty"
+
+  - name: stg_devices
+    description: "Staged device data with data type conversions and quality flags. Includes validation for device types and store associations."
+    columns:
+      - name: device_id
+        description: "Unique device identifier (converted to integer)"
+        tests:
+          - not_null
+          - unique
+      - name: device_type
+        description: "Device type (1-5, converted to integer)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+      - name: store_id
+        description: "Store identifier where device is located"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_stores')
+              field: store_id
+      - name: null_store_id
+        description: "Data quality flag: true if store_id is null"
+      - name: null_device_type
+        description: "Data quality flag: true if device_type is null"
+      - name: invalid_device_type
+        description: "Data quality flag: true if device_type is not 1-5"
+
+  - name: stg_transactions
+    description: "Staged transaction data with data type conversions and comprehensive quality flags. Includes business logic validation for downstream analytics."
+    columns:
+      - name: transaction_id
+        description: "Unique transaction identifier (converted to integer)"
+        tests:
+          - not_null
+          - unique
+      - name: device_id
+        description: "Device identifier used for transaction"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_devices')
+              field: device_id
+      - name: product_name
+        description: "Name of the product sold"
+      - name: product_sku
+        description: "Stock Keeping Unit - unique product identifier (normalized)"
+        tests:
+          - not_null
+      - name: category_name
+        description: "Product category"
+      - name: amount
+        description: "Transaction amount in euros (converted to integer)"
+        tests:
+          - not_null
+      - name: status
+        description: "Transaction status"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['accepted', 'cancelled', 'refused']
+      - name: card_number
+        description: "Payment card number (cleaned and converted to bigint)"
+        tests:
+          - not_null
+      - name: cvv
+        description: "Card verification value (converted to integer)"
+        tests:
+          - not_null
+      - name: created_at
+        description: "Transaction creation timestamp (formatted)"
+        tests:
+          - not_null
+      - name: transaction_date
+        description: "Transaction occurrence timestamp (formatted)"
+        tests:
+          - not_null
+      - name: null_device_id
+        description: "Data quality flag: true if device_id is null"
+      - name: null_sku
+        description: "Data quality flag: true if product_sku is null or empty"
+      - name: invalid_amount
+        description: "Data quality flag: true if amount is negative or null"
+      - name: invalid_status
+        description: "Data quality flag: true if status is not accepted/cancelled/refused"
+      - name: invalid_dates
+        description: "Data quality flag: true if created_at < happened_at"
+      - name: is_successful
+        description: "Business logic flag: true if transaction status is 'accepted'"
+
+# =============================================================================
+# CLEANING MODELS (Layer 2)
+# =============================================================================
+  - name: cln_stores
+    description: "Cleaned store data with data quality issues filtered out. Contains only valid store records for downstream processing."
+    columns:
+      - name: store_id
+        description: "Unique store identifier"
+        tests:
+          - not_null
+          - unique
+      - name: store_name
+        description: "Store name"
+        tests:
+          - not_null
+      - name: address
+        description: "Store physical address"
+      - name: city
+        description: "City where store is located"
+      - name: country
+        description: "Country where store is located"
+        tests:
+          - not_null
+      - name: store_created_at
+        description: "Store creation timestamp"
+        tests:
+          - not_null
+      - name: store_typology
+        description: "Store business typology/category"
+        tests:
+          - not_null
+      - name: customer_id
+        description: "Customer identifier who owns the store"
+        tests:
+          - not_null
+
+  - name: cln_devices
+    description: "Cleaned device data with data quality issues filtered out. Contains only valid device records with proper store associations."
+    columns:
+      - name: device_id
+        description: "Unique device identifier"
+        tests:
+          - not_null
+          - unique
+      - name: device_type
+        description: "Device type (1-5)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+      - name: store_id
+        description: "Store identifier where device is located"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('cln_stores')
+              field: store_id
+
+  - name: cln_transactions
+    description: "Cleaned transaction data with data quality issues filtered out and enriched with store and device information. Contains only valid transaction records for analytics."
+    columns:
+      - name: transaction_id
+        description: "Unique transaction identifier"
+        tests:
+          - not_null
+          - unique
+      - name: device_id
+        description: "Device identifier used for transaction"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('cln_devices')
+              field: device_id
+      - name: product_sku
+        description: "Stock Keeping Unit - unique product identifier"
+        tests:
+          - not_null
+      - name: category_name
+        description: "Product category"
+      - name: amount
+        description: "Transaction amount in euros"
+        tests:
+          - not_null
+      - name: status
+        description: "Transaction status"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['accepted', 'cancelled', 'refused']
+      - name: card_number
+        description: "Payment card number"
+        tests:
+          - not_null
+      - name: cvv
+        description: "Card verification value"
+        tests:
+          - not_null
+      - name: created_at
+        description: "Transaction creation timestamp"
+        tests:
+          - not_null
+      - name: transaction_date
+        description: "Transaction occurrence timestamp"
+        tests:
+          - not_null
+      - name: is_successful
+        description: "Business logic flag: true if transaction status is 'accepted'"
+      - name: device_type
+        description: "Device type used for transaction"
+        tests:
+          - not_null
+      - name: store_id
+        description: "Store identifier where transaction occurred"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('cln_stores')
+              field: store_id
+      - name: store_name
+        description: "Store name where transaction occurred"
+        tests:
+          - not_null
+      - name: address
+        description: "Store address where transaction occurred"
+      - name: city
+        description: "Store city where transaction occurred"
+      - name: country
+        description: "Store country where transaction occurred"
+        tests:
+          - not_null
+      - name: store_created_at
+        description: "Store creation timestamp"
+        tests:
+          - not_null
+      - name: store_typology
+        description: "Store business typology/category"
+        tests:
+          - not_null
+      - name: customer_id
+        description: "Customer identifier who owns the store"
+        tests:
+          - not_null
+
+# =============================================================================
+# DIMENSIONAL MODELS (Layer 3)
+# =============================================================================
+  - name: dim_stores
+    description: "Store dimension table containing unique store records with all store attributes. Used for store-based analytics and reporting."
+    columns:
+      - name: store_id
+        description: "Unique store identifier (primary key)"
+        tests:
+          - not_null
+          - unique
+      - name: store_name
+        description: "Store name"
+        tests:
+          - not_null
+      - name: store_typology
+        description: "Store business typology/category"
+        tests:
+          - not_null
+      - name: address
+        description: "Store physical address"
+      - name: city
+        description: "City where store is located"
+      - name: country
+        description: "Country where store is located"
+        tests:
+          - not_null
+      - name: customer_id
+        description: "Customer identifier who owns the store"
+        tests:
+          - not_null
+      - name: store_created_at
+        description: "Store creation timestamp"
+        tests:
+          - not_null
+
+  - name: dim_devices
+    description: "Device dimension table containing unique device records with device attributes. Used for device-based analytics and reporting."
+    columns:
+      - name: device_id
+        description: "Unique device identifier (primary key)"
+        tests:
+          - not_null
+          - unique
+      - name: device_type
+        description: "Device type (1-5)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+      - name: store_id
+        description: "Store identifier where device is located"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_stores')
+              field: store_id
+
+  - name: dim_products
+    description: "Product dimension table containing unique product records. Based on SKU as unique identifier due to data quality issues with product names and categories."
+    columns:
+      - name: product_sku
+        description: "Stock Keeping Unit - unique product identifier (primary key)"
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_date
+    description: "Date dimension table for temporal analytics. Contains calendar attributes for transaction date analysis."
+    columns:
+      - name: date_key
+        description: "Date in YYYY-MM-DD format (primary key)"
+        tests:
+          - not_null
+          - unique
+      - name: calendar_year
+        description: "Calendar year"
+        tests:
+          - not_null
+      - name: month_of_year
+        description: "Month of year (1-12)"
+        tests:
+          - not_null
+      - name: day_of_week
+        description: "Day of week (1-7)"
+        tests:
+          - not_null
+      - name: year_month_key
+        description: "Year-month key for grouping"
+
+  - name: fct_transactions
+    description: "Transaction fact table containing all transaction records with foreign keys to dimension tables. Central table for transaction analytics and reporting."
+    columns:
+      - name: transaction_id
+        description: "Unique transaction identifier (primary key)"
+        tests:
+          - not_null
+          - unique
+      - name: device_id
+        description: "Device identifier (foreign key to dim_devices)"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_devices')
+              field: device_id
+      - name: device_type
+        description: "Device type for denormalized access"
+        tests:
+          - not_null
+      - name: store_id
+        description: "Store identifier (foreign key to dim_stores)"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_stores')
+              field: store_id
+      - name: product_sku
+        description: "Product SKU (foreign key to dim_products)"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_products')
+              field: product_sku
+      - name: amount
+        description: "Transaction amount in euros"
+        tests:
+          - not_null
+      - name: status
+        description: "Transaction status"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['accepted', 'cancelled', 'refused']
+      - name: is_successful
+        description: "Business logic flag: true if transaction status is 'accepted'"
+      - name: store_name
+        description: "Store name for denormalized access"
+        tests:
+          - not_null
+      - name: country
+        description: "Store country for denormalized access"
+        tests:
+          - not_null
+      - name: store_typology
+        description: "Store typology for denormalized access"
+        tests:
+          - not_null
+      - name: transaction_date
+        description: "Transaction occurrence timestamp"
+        tests:
+          - not_null
+      - name: calendar_year
+        description: "Calendar year of transaction"
+        tests:
+          - not_null
+      - name: month_of_year
+        description: "Month of year of transaction"
+        tests:
+          - not_null
+      - name: day_of_week
+        description: "Day of week of transaction"
+        tests:
+          - not_null
+      - name: year_month_key
+        description: "Year-month key for temporal grouping"
+
+# =============================================================================
+# BUSINESS INTELLIGENCE MODELS (Layer 4 & 5)
+# =============================================================================
+  - name: bi_transactions_incremental
+    description: "Incremental business intelligence table for transaction analytics. Optimized for large-scale data processing with incremental updates."
+    columns:
+      - name: transaction_id
+        description: "Unique transaction identifier"
+        tests:
+          - not_null
+          - unique
+      - name: device_id
+        description: "Device identifier"
+        tests:
+          - not_null
+      - name: device_type
+        description: "Device type (1-5)"
+        tests:
+          - not_null
+      - name: store_id
+        description: "Store identifier"
+        tests:
+          - not_null
+      - name: product_sku
+        description: "Product SKU"
+        tests:
+          - not_null
+      - name: amount
+        description: "Transaction amount in euros"
+        tests:
+          - not_null
+      - name: status
+        description: "Transaction status"
+        tests:
+          - not_null
+      - name: is_successful
+        description: "Business logic flag: true if transaction status is 'accepted'"
+      - name: store_name
+        description: "Store name"
+        tests:
+          - not_null
+      - name: country
+        description: "Store country"
+        tests:
+          - not_null
+      - name: store_typology
+        description: "Store typology"
+        tests:
+          - not_null
+      - name: transaction_date
+        description: "Transaction occurrence timestamp"
+        tests:
+          - not_null
+
+# =============================================================================
+# BUSINESS INTELLIGENCE VIEWS (Layer 5)
+# =============================================================================
+  - name: q_1_top_stores
+    description: "Business intelligence view: Top 10 stores by transacted amount. Identifies highest-performing stores for business analysis."
+    columns:
+      - name: store_id
+        description: "Store identifier"
+        tests:
+          - not_null
+      - name: store_name
+        description: "Store name"
+        tests:
+          - not_null
+      - name: total_amount
+        description: "Total transaction amount for the store"
+        tests:
+          - not_null
+
+  - name: q_2_top_products
+    description: "Business intelligence view: Top 10 products by sales count. Identifies most popular products for inventory and marketing decisions."
+    columns:
+      - name: product_sku
+        description: "Product SKU"
+        tests:
+          - not_null
+      - name: total_sales
+        description: "Total number of sales for the product"
+        tests:
+          - not_null
+
+  - name: q_3_avg_transaction_amount
+    description: "Business intelligence view: Average transaction amount by store typology and country. Analyzes transaction patterns by store type and location."
+    columns:
+      - name: store_typology
+        description: "Store business typology"
+        tests:
+          - not_null
+      - name: country
+        description: "Store country"
+        tests:
+          - not_null
+      - name: avg_amount
+        description: "Average transaction amount for the typology-country combination"
+        tests:
+          - not_null
+
+  - name: q_4_transactions_per_device
+    description: "Business intelligence view: Percentage of transactions per device type. Shows device usage distribution for capacity planning."
+    columns:
+      - name: device_type
+        description: "Device type (1-5)"
+        tests:
+          - not_null
+      - name: transaction_percentage
+        description: "Percentage of total transactions for this device type"
+        tests:
+          - not_null
+
+  - name: q_5_time_to_five_transactions
+    description: "Business intelligence view: Average time for a store to perform its first 5 transactions. Measures device adoption speed for customer success analysis."
+    columns:
+      - name: avg_time_to_fifth_transaction
+        description: "Average time interval between first and fifth transaction"
+        tests:
+          - not_null

@@ -154,3 +154,10 @@ The solution is fully reproducible with:
 3. **SKU-based product identification** to handle data quality issues
 4. **Modular dbt architecture** for maintainable data pipelines
 5. **Business-focused naming** for clear query identification
+
+## Entity Relationship Diagram (ERD)
+
+### Data Model Overview
+
+Below diagram shows the relationships between core entities in the SumUp data model.
+
