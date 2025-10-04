@@ -39,5 +39,8 @@ models:
       +materialized: table
     3-dm:
       +materialized: table
-    4-bi:
+    4-bi-tb:
+      +materialized: incremental
+      +on_schema_change: 'append_new_columns'
+    5-bi-vw:
       +materialized: view

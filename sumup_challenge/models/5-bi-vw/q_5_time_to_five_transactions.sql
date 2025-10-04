@@ -5,7 +5,7 @@ with ranked as
 		store_id,
 		transaction_date,
 		row_number() over (partition by store_id order by transaction_date asc) as rn
-		from {{ ref('fct_transactions') }}
+		from {{ ref('bi_transactions_incremental') }}
 		where is_successful = true
 ),
 first_transaction as 

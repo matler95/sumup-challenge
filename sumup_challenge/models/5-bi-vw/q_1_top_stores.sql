@@ -3,7 +3,7 @@ SELECT
     store_id,
     store_name,
     SUM(amount) as total_amount
-FROM {{ ref('fct_transactions') }}
+FROM {{ ref('bi_transactions_incremental') }}
 WHERE store_id IS NOT NULL
 AND is_successful = true
 GROUP BY 1, 2
