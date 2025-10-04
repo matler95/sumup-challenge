@@ -1,0 +1,55 @@
+version: 2
+models:
+- name: raw_devices
+  description: ''
+  columns:
+  - name: id
+    description: ''
+  - name: type
+    description: ''
+  - name: store_id
+    description: ''
+- name: raw_stores
+  description: ''
+  columns:
+  - name: id
+    description: ''
+  - name: name
+    description: ''
+  - name: address
+    description: ''
+  - name: city
+    description: ''
+  - name: country
+    description: ''
+  - name: created_at
+    description: ''
+  - name: typology
+    description: ''
+  - name: customer_id
+    description: ''
+- name: raw_transactions
+  description: ''
+  columns:
+  - name: id
+    description: ''
+  - name: device_id
+    description: ''
+  - name: product_name
+    description: ''
+  - name: product_sku
+    description: ''
+  - name: category_name
+    description: ''
+  - name: amount
+    description: ''
+  - name: status
+    description: ''
+  - name: card_number
+    description: ''
+  - name: cvv
+    description: ''
+  - name: created_at
+    description: ''
+  - name: happened_at
+    description: ''

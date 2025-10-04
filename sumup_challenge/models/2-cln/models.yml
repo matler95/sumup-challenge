@@ -1,0 +1,73 @@
+version: 2
+models:
+- name: cln_devices
+  description: ''
+  columns:
+  - name: device_id
+    description: ''
+  - name: device_type
+    description: ''
+  - name: store_id
+    description: ''
+- name: cln_stores
+  description: ''
+  columns:
+  - name: store_id
+    description: ''
+  - name: store_name
+    description: ''
+  - name: store_typology
+    description: ''
+  - name: address
+    description: ''
+  - name: city
+    description: ''
+  - name: country
+    description: ''
+  - name: customer_id
+    description: ''
+  - name: store_created_at
+    description: ''
+- name: cln_transactions
+  description: ''
+  columns:
+  - name: transaction_id
+    description: ''
+  - name: device_id
+    description: ''
+  - name: product_sku
+    description: ''
+  - name: category_name
+    description: ''
+  - name: amount
+    description: ''
+  - name: status
+    description: ''
+  - name: card_number
+    description: ''
+  - name: cvv
+    description: ''
+  - name: created_at
+    description: ''
+  - name: transaction_date
+    description: ''
+  - name: is_successful
+    description: ''
+  - name: device_type
+    description: ''
+  - name: store_id
+    description: ''
+  - name: store_name
+    description: ''
+  - name: address
+    description: ''
+  - name: city
+    description: ''
+  - name: country
+    description: ''
+  - name: store_created_at
+    description: ''
+  - name: store_typology
+    description: ''
+  - name: customer_id
+    description: ''

@@ -1,0 +1,79 @@
+version: 2
+models:
+- name: stg_devices
+  description: ''
+  columns:
+  - name: device_id
+    description: ''
+  - name: device_type
+    description: ''
+  - name: store_id
+    description: ''
+  - name: null_store_id
+    description: ''
+  - name: null_device_type
+    description: ''
+  - name: invalid_device_type
+    description: ''
+- name: stg_stores
+  description: ''
+  columns:
+  - name: store_id
+    description: ''
+  - name: store_name
+    description: ''
+  - name: address
+    description: ''
+  - name: city
+    description: ''
+  - name: country
+    description: ''
+  - name: store_created_at
+    description: ''
+  - name: store_typology
+    description: ''
+  - name: customer_id
+    description: ''
+  - name: null_name
+    description: ''
+  - name: null_country
+    description: ''
+  - name: null_typology
+    description: ''
+- name: stg_transactions
+  description: ''
+  columns:
+  - name: transaction_id
+    description: ''
+  - name: device_id
+    description: ''
+  - name: product_name
+    description: ''
+  - name: product_sku
+    description: ''
+  - name: category_name
+    description: ''
+  - name: amount
+    description: ''
+  - name: status
+    description: ''
+  - name: card_number
+    description: ''
+  - name: cvv
+    description: ''
+  - name: created_at
+    description: ''
+  - name: transaction_date
+    description: ''
+  - name: null_device_id
+    description: ''
+  - name: null_sku
+    description: ''
+  - name: invalid_amount
+    description: ''
+  - name: invalid_status
+    description: ''
+  - name: invalid_dates
+    description: ''
+  - name: is_successful
+    description: ''

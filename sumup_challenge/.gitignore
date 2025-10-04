@@ -4,3 +4,4 @@ dbt_packages/
 logs/
 .dbt/.user.yml
 dev.duckdb
+consolidate_schemas.py

@@ -1,0 +1,54 @@
+version: 2
+models:
+- name: dim_date
+  description: ''
+  columns:
+  - name: date_key
+    description: ''
+  - name: calendar_year
+    description: ''
+  - name: month_of_year
+    description: ''
+  - name: day_of_month
+    description: ''
+  - name: day_of_week
+    description: ''
+  - name: year_month_key
+    description: ''
+  - name: day_name_short
+    description: ''
+- name: dim_devices
+  description: ''
+  columns:
+  - name: device_id
+    description: ''
+  - name: device_type
+    description: ''
+  - name: store_id
+    description: ''
+- name: dim_products
+  description: ''
+  columns:
+  - name: product_id
+    description: ''
+  - name: product_sku
+    description: ''
+- name: dim_stores
+  description: ''
+  columns:
+  - name: store_id
+    description: ''
+  - name: store_name
+    description: ''
+  - name: store_typology
+    description: ''
+  - name: address
+    description: ''
+  - name: city
+    description: ''
+  - name: country
+    description: ''
+  - name: customer_id
+    description: ''
+  - name: store_created_at
+    description: ''

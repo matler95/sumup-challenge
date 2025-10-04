@@ -1,0 +1,39 @@
+version: 2
+models:
+- name: q_1_top_stores
+  description: ''
+  columns:
+  - name: store_id
+    description: ''
+  - name: store_name
+    description: ''
+  - name: total_amount
+    description: ''
+- name: q_2_top_products
+  description: ''
+  columns:
+  - name: product_sku
+    description: ''
+  - name: total_sales
+    description: ''
+- name: q_3_avg_transaction_amount
+  description: ''
+  columns:
+  - name: store_typology
+    description: ''
+  - name: country
+    description: ''
+  - name: avg_amount
+    description: ''
+- name: q_4_transactions_per_device
+  description: ''
+  columns:
+  - name: device_type
+    description: ''
+  - name: transaction_percentage
+    description: ''
+- name: q_5_time_to_five_transactions
+  description: ''
+  columns:
+  - name: avg_time_to_fifth_transaction
+    description: ''

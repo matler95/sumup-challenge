@@ -1,0 +1,127 @@
+version: 2
+models:
+- name: bi_transactions_incremental
+  description: ''
+  columns:
+  - name: transaction_id
+    description: ''
+  - name: device_id
+    description: ''
+  - name: product_sku
+    description: ''
+  - name: amount
+    description: ''
+  - name: status
+    description: ''
+  - name: is_successful
+    description: ''
+  - name: transaction_date
+    description: ''
+  - name: device_type
+    description: ''
+  - name: store_id
+    description: ''
+  - name: store_name
+    description: ''
+  - name: country
+    description: ''
+  - name: store_typology
+    description: ''
+  - name: customer_id
+    description: ''
+  - name: calendar_year
+    description: ''
+  - name: month_of_year
+    description: ''
+  - name: day_of_week
+    description: ''
+  - name: year_month_key
+    description: ''
+  - name: dbt_updated_at
+    description: ''
+  - name: dbt_inserted_at
+    description: ''
+- name: dim_devices_incremental
+  description: ''
+  columns:
+  - name: device_id
+    description: ''
+  - name: device_type
+    description: ''
+  - name: store_id
+    description: ''
+  - name: dbt_updated_at
+    description: ''
+  - name: dbt_inserted_at
+    description: ''
+- name: dim_products_incremental
+  description: ''
+  columns:
+  - name: product_sku
+    description: ''
+  - name: dbt_updated_at
+    description: ''
+  - name: dbt_inserted_at
+    description: ''
+- name: dim_stores_incremental
+  description: ''
+  columns:
+  - name: store_id
+    description: ''
+  - name: store_name
+    description: ''
+  - name: store_typology
+    description: ''
+  - name: address
+    description: ''
+  - name: city
+    description: ''
+  - name: country
+    description: ''
+  - name: customer_id
+    description: ''
+  - name: store_created_at
+    description: ''
+  - name: dbt_updated_at
+    description: ''
+  - name: dbt_inserted_at
+    description: ''
+- name: fct_transactions_incremental
+  description: ''
+  columns:
+  - name: transaction_id
+    description: ''
+  - name: device_id
+    description: ''
+  - name: device_type
+    description: ''
+  - name: store_id
+    description: ''
+  - name: product_sku
+    description: ''
+  - name: amount
+    description: ''
+  - name: status
+    description: ''
+  - name: is_successful
+    description: ''
+  - name: store_name
+    description: ''
+  - name: country
+    description: ''
+  - name: store_typology
+    description: ''
+  - name: transaction_date
+    description: ''
+  - name: calendar_year
+    description: ''
+  - name: month_of_year
+    description: ''
+  - name: day_of_week
+    description: ''
+  - name: year_month_key
+    description: ''
+  - name: dbt_updated_at
+    description: ''
+  - name: dbt_inserted_at
+    description: ''

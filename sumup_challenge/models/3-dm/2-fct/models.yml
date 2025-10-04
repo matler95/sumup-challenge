@@ -1,0 +1,37 @@
+version: 2
+models:
+- name: fct_transactions
+  description: ''
+  columns:
+  - name: transaction_id
+    description: ''
+  - name: device_id
+    description: ''
+  - name: device_type
+    description: ''
+  - name: store_id
+    description: ''
+  - name: product_sku
+    description: ''
+  - name: amount
+    description: ''
+  - name: status
+    description: ''
+  - name: is_successful
+    description: ''
+  - name: store_name
+    description: ''
+  - name: country
+    description: ''
+  - name: store_typology
+    description: ''
+  - name: transaction_date
+    description: ''
+  - name: calendar_year
+    description: ''
+  - name: month_of_year
+    description: ''
+  - name: day_of_week
+    description: ''
+  - name: year_month_key
+    description: ''
